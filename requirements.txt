@@ -1,0 +1,7 @@
+paho-mqtt
+cryptography
+meshtastic
+dotenv
+sqlalchemy
+pydantic
+pynacl
