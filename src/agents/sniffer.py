@@ -1,7 +1,7 @@
 import logging
 import time
-from src.mqtt_client import connect_and_get_client, disconnect_client
-from settings import MQTT_BROKER, MQTT_PORT, MQTT_USERNAME, MQTT_PASSWORD, ROOT_TOPIC, CHANNEL, BROADCAST_MAC
+from src.clients.mqtt_client import connect_and_get_client, disconnect_client
+from settings import MQTT_BROKER, MQTT_PORT, MQTT_USERNAME, MQTT_PASSWORD, ROOT_TOPIC, CHANNEL, BROADCAST_MAC, CLIENT_ID
 from src.utils import set_topic, ensure_aes_key
 from src.mesh.packet.handler import filtered_on_message_factory
 
@@ -25,7 +25,7 @@ class Sniffer:
             enabled_portnums=None
     ):
         self.mqtt_client = connect_and_get_client(
-            MQTT_BROKER, MQTT_PORT, MQTT_USERNAME, MQTT_PASSWORD, self.key, self.debug, lambda: None, self.publish_topic
+            MQTT_BROKER, MQTT_PORT, MQTT_USERNAME, MQTT_PASSWORD, self.key, self.debug, lambda: None, self.publish_topic, CLIENT_ID
         )
         topic = f"{ROOT_TOPIC}#"
         self.mqtt_client.client.subscribe(topic)

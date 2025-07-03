@@ -1,5 +1,8 @@
 import base64
 import logging
+import os
+
+from prettytable import PrettyTable
 
 from meshtastic.protobuf import mesh_pb2
 
@@ -49,6 +52,44 @@ def num_to_mac(num):
 
 def hw_num_to_model(hw_model_n):
     """Convert a hardware model number to its name."""
-    if hw_model_n is None:
+    hw_model_int = int(hw_model_n) if isinstance(hw_model_n, str) else hw_model_n
+    if hw_model_int is None:
         return None
-    return mesh_pb2.HardwareModel.Name(hw_model_n) if hw_model_n else None
+    return mesh_pb2.HardwareModel.Name(hw_model_int) if hw_model_int else None
+
+def hw_model_to_num(hw_model):
+    """Convert a hardware model name to its number."""
+    if hw_model is None:
+        return None
+    return mesh_pb2.HardwareModel.Value(hw_model) if isinstance(hw_model, str) else hw_model
+
+
+def print_table(data, headers=None):
+    """
+    Print a table in a formatted way.
+    Use the library 'prettytable' for better formatting.
+    """
+    
+    if not data:
+        logging.warning("No data to display in table.")
+        return
+
+    table = PrettyTable()
+    
+    if headers:
+        table.field_names = headers
+    else:
+        table.field_names = data[0].keys() if isinstance(data, list) and data else []
+
+    for row in data:
+        if isinstance(row, dict):
+            row = {k: (v if v is not None else '-') for k, v in row.items()}
+            table.add_row(row.values())
+        else:
+            table.add_row(row)
+
+    print(table)
+
+def clear_screen():
+    # Works for most Unix and Windows terminals
+    os.system('cls' if os.name == 'nt' else 'clear')

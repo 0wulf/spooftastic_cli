@@ -30,8 +30,9 @@ spooftastic is a command-line utility for interacting with Meshtastic networks v
 
 2. Install dependencies (preferably in a virtual environment):
    ```bash
-   python -m venv .
-   bin/pip install -r requirements.txt
+   python -m venv .venv
+   source venv/bin/activate
+   pip install -r requirements.txt
    ```
 
 3. Configure your MQTT and Meshtastic settings in your .env file.
@@ -40,27 +41,27 @@ spooftastic is a command-line utility for interacting with Meshtastic networks v
 
 Run the CLI tool:
 ```bash
-bin/python spooftastic.py <mode> [options]
+python spooftastic.py <mode> [options]
 ```
 
 ### Typical Usage Workflow
 
 1. **Populate the database**: Use the sniffer to capture nodeinfo and position packets from the target node. This is necessary to gather the real information of the node you want to spoof.
    ```bash
-   bin/python spooftastic.py sniffer --nodeinfo --position
+   python spooftastic.py sniffer --nodeinfo --position
    ```
    Let the sniffer run until it captures the relevant packets. The information will be stored in the local database.
 
 2. **Verify the database**: Check that the node information has been correctly stored.
    ```bash
-   bin/python spooftastic.py db nodes list
+   python spooftastic.py db nodes list
    # or
-   bin/python spooftastic.py db nodes get <node_id>
+   python spooftastic.py db nodes get <node_id>
    ```
 
 3. **Spoofing**: You can now spoof the node. When spoofing, the tool will use the information you provide via command-line arguments. If a parameter is not provided, it will use the value from the database for that node. If the information is not available, it will fall back to a default value.
    ```bash
-   bin/python spooftastic.py spoofer --node-id <mac> --short-name "Evil" --lat 12.34 --lon 56.78 periodic --interval 30
+   python spooftastic.py spoofer --node-id <mac> --short-name "Evil" --lat 12.34 --lon 56.78 periodic --interval 30
    ```
    - Any parameter not provided will be filled from the database entry for that node.
    - If the database entry is missing, a default value is used.
@@ -73,7 +74,7 @@ Some Meshtastic bots don't check for secure channel when receiving a message, th
 
 **Example:**
 ```bash
-bin/python spooftastic.py send --to-node <bbs_node_mac> --from-node <spoofed_node_mac> message --message "<pub_bbs_command> <message>"
+python spooftastic.py send --to-node <bbs_node_mac> --from-node <spoofed_node_mac> message --message "<pub_bbs_command> <message>"
 ```
 - Replace `<bbs_node_mac>` with the MAC address of the node running the BBS service.
 - Replace `<spoofed_node_mac>` with the MAC address of the node you want to impersonate.
@@ -88,7 +89,7 @@ This will publish a message to the BBS as if it came from the spoofed node. Use 
 
 Sniff / listen for incoming packets on the MQTT broker.
 ```bash
-bin/python spooftastic.py sniffer [--text] [--seq] [--position] [--nodeinfo] [--route] [--telemetry]
+python spooftastic.py sniffer [--text] [--seq] [--position] [--nodeinfo] [--route] [--telemetry]
 ```
 - `--text`: Print incoming text messages
 - `--seq`: Print incoming sequence numbers
@@ -101,7 +102,7 @@ bin/python spooftastic.py sniffer [--text] [--seq] [--position] [--nodeinfo] [--
 
 Send data to the network.
 ```bash
-bin/python spooftastic.py send <type> [options]
+python spooftastic.py send <type> [options]
 ```
 Types:
 - `position`: Send position data
@@ -117,27 +118,27 @@ Common options:
 
 Send a position packet:
 ```bash
-bin/python spooftastic.py send position --lat 12.34 --lon 56.78 --alt 100 --to-node <mac> --from-node <mac>
+python spooftastic.py send position --lat 12.34 --lon 56.78 --alt 100 --to-node <mac> --from-node <mac>
 ```
 Send a nodeinfo packet:
 ```bash
-bin/python spooftastic.py send nodeinfo --short-name "Test" --long-name "Test Node" --hw-model 43 --to-node <mac> --from-node <mac>
+python spooftastic.py send nodeinfo --short-name "Test" --long-name "Test Node" --hw-model 43 --to-node <mac> --from-node <mac>
 # hw-model 43 corresponds to the HELTEC_V3
 ```
 Send a text message packet:
 ```bash
-bin/python spooftastic.py send message --message "Hello world" --to-node <mac> --from-node <mac>
+python spooftastic.py send message --message "Hello world" --to-node <mac> --from-node <mac>
 ```
 
 ### 3. Database
 
 Manage the local node database.
 ```bash
-bin/python spooftastic.py db nodes list
-bin/python spooftastic.py db nodes get <node_id>
-bin/python spooftastic.py db nodes set <node_id> <column> <value>
-bin/python spooftastic.py db show-nodes
-bin/python spooftastic.py db delete
+python spooftastic.py db nodes list
+python spooftastic.py db nodes get <node_id>
+python spooftastic.py db nodes set <node_id> <column> <value>
+python spooftastic.py db show-nodes
+python spooftastic.py db delete
 ```
 - `list`: List all nodes
 - `get <node_id>`: Get node by MAC or number
@@ -149,7 +150,7 @@ bin/python spooftastic.py db delete
 
 Spoof node data on the network.
 ```bash
-bin/python spooftastic.py spoofer --node-id <id> [options] <spoof_mode> [spoof_mode options]
+python spooftastic.py spoofer --node-id <id> [options] <spoof_mode> [spoof_mode options]
 ```
 Options:
 - `--gateway-node <mac>`: Gateway node MAC (default: broadcast)
@@ -173,12 +174,12 @@ Spoofing modes:
 
 Spoof `!deadbeef`'s short name, latitude, longitude every 30 seconds:
 ```bash
-bin/python spooftastic.py spoofer --node-id '!deadbeef' --short-name "Evil" --lat 12.34 --lon 56.78 periodic --interval 30
+python spooftastic.py spoofer --node-id '!deadbeef' --short-name "Evil" --lat 12.34 --lon 56.78 periodic --interval 30
 ```
 
 Replay with burst of 3 every 2 seconds
 ```bash
-bin/python spooftastic spoofer --node-id '!deadbeef' --burst 3 --period 2 <spoofmode>
+python spooftastic spoofer --node-id '!deadbeef' --burst 3 --period 2 <spoofmode>
 ```
 
 ## Configuration
@@ -189,7 +190,7 @@ Copy the `.env.example` file into `.env` and then edit `.env` to set your MQTT b
 
 Use `--debug` after calling the main script to enable verbose logging for troubleshooting.
 ```bash
-bin/python spooftastic.py --debug <mode>
+python spooftastic.py --debug <mode>
 ```
 ## Security and Spoofing Considerations
 
@@ -202,8 +203,10 @@ bin/python spooftastic.py --debug <mode>
 
 - **Full parameter spoofing**: Spoof all parameters from the database for a node.
 - **ATAK spoofing**: Spoof all packets and information from the Meshtastic ATAK module.
-- **Spoof-based MitM attack**: Theoretical attack where two controlled nodes impersonate two victims (A and B), relaying and modifying messages between them.
 - **PKC/PKI decryption**: Ability to decrypt messages using public key cryptography.
+- **Virtual Nodes**: Create your own virtual nodes for use in more sophisticated attacks.
+- **Spoof-based MitM attack**: Theoretical attack where two controlled nodes impersonate two victims (A and B), relaying and modifying messages between them.
+
 
 ## Contributing
 

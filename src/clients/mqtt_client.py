@@ -2,14 +2,14 @@ import paho.mqtt.client as mqtt
 import ssl
 
 class MqttBrokerClient:
-    def __init__(self, broker, port, username, password, on_connect=None, tls=False, ca_certs=None):
+    def __init__(self, broker, port, username, password, client_id="", on_connect=None, tls=False, ca_certs=None):
         self.broker = broker
         self.port = port
         self.username = username
         self.password = password
         self.tls = tls
         self.ca_certs = ca_certs
-        self.client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2, client_id="", clean_session=True, userdata=None)
+        self.client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2, client_id=client_id, clean_session=True, userdata=None)
         if on_connect:
             self.client.on_connect = on_connect
         self.tls_configured = False
@@ -54,7 +54,7 @@ class MqttBrokerClient:
     def set_on_connect(self, on_connect):
         self.client.on_connect = on_connect
 
-def connect_and_get_client(mqtt_broker, mqtt_port, mqtt_username, mqtt_password, key, debug, set_topic_fn, publish_topic):
+def connect_and_get_client(mqtt_broker, mqtt_port, mqtt_username, mqtt_password, key, debug, set_topic_fn, publish_topic, client_id):
     tls = mqtt_port == 8883
     ca_certs = "cacert.pem" if tls else None
     mqtt_client = MqttBrokerClient(
@@ -62,6 +62,7 @@ def connect_and_get_client(mqtt_broker, mqtt_port, mqtt_username, mqtt_password,
         port=mqtt_port,
         username=mqtt_username,
         password=mqtt_password,
+        client_id=client_id,
         tls=tls,
         ca_certs=ca_certs
     )

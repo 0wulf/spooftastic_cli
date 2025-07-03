@@ -1,13 +1,13 @@
 from src.mesh.packet.crafter import send_position, send_message, send_node_info
-from src.mqtt_client import connect_and_get_client, disconnect_client
-from settings import MQTT_BROKER, MQTT_PORT, MQTT_USERNAME, MQTT_PASSWORD, ROOT_TOPIC, CHANNEL, KEY, DEBUG, BROADCAST_MAC
-from src.utils import set_topic
-from src.db import DB
+from src.clients.mqtt_client import connect_and_get_client, disconnect_client
+from settings import MQTT_BROKER, MQTT_PORT, MQTT_USERNAME, MQTT_PASSWORD, ROOT_TOPIC, CHANNEL, KEY, DEBUG, BROADCAST_MAC, CLIENT_ID
+from src.utils import set_topic, hw_model_to_num
+from src.clients.db_client import DB
 import time
 import logging
 import random
 from meshtastic.protobuf import portnums_pb2
-from src.sniffer import Sniffer
+from src.agents.sniffer import Sniffer
 import threading
 from contextlib import contextmanager
 
@@ -20,7 +20,7 @@ class Spoofer:
 
     def _get_mqtt_client(self, publish_topic, timeout=5):
         client = connect_and_get_client(
-            MQTT_BROKER, MQTT_PORT, MQTT_USERNAME, MQTT_PASSWORD, KEY, DEBUG, lambda: None, publish_topic
+            MQTT_BROKER, MQTT_PORT, MQTT_USERNAME, MQTT_PASSWORD, KEY, DEBUG, lambda: None, publish_topic, CLIENT_ID
         )
         # Wait for connection (max timeout seconds)
         waited = 0
@@ -67,7 +67,7 @@ class Spoofer:
         """
         short = short_name or ""
         long = long_name or ""
-        hw = hw_model if hw_model is not None else 43  # Use 43 as default, or import from settings if you wish
+        hw = hw_model_to_num(hw_model) if hw_model is not None else 43  # Use 43 as default, or import from settings if you wish
         publish_topic = _get_publish_topic(gateway_node or BROADCAST_MAC)
         def send():
             with self.mqtt_client_context(publish_topic) as mqtt_client:
@@ -106,7 +106,7 @@ class Spoofer:
         params = self.get_effective_spoof_params(from_node, {
             'short_name': short_name,
             'long_name': long_name,
-            'hw_model': hw_model,
+            'hw_model': hw_model_to_num(hw_model) if hw_model is not None else 43,
             'lat': lat,
             'lon': lon,
             'alt': alt,
@@ -124,7 +124,7 @@ class Spoofer:
         params = self.get_effective_spoof_params(from_node, {
             'short_name': short_name,
             'long_name': long_name,
-            'hw_model': hw_model,
+            'hw_model': hw_model_to_num(hw_model) if hw_model is not None else 43,
             'lat': lat,
             'lon': lon,
             'alt': alt,
@@ -194,7 +194,7 @@ class Spoofer:
         params = self.get_effective_spoof_params(from_node, {
             'short_name': short_name,
             'long_name': long_name,
-            'hw_model': hw_model,
+            'hw_model': hw_model_to_num(hw_model) if hw_model is not None else 43,
             'lat': lat,
             'lon': lon,
             'alt': alt,
@@ -216,7 +216,7 @@ class Spoofer:
         params = self.get_effective_spoof_params(from_node, {
             'short_name': short_name,
             'long_name': long_name,
-            'hw_model': hw_model,
+            'hw_model': hw_model_to_num(hw_model) if hw_model is not None else 43,
             'lat': lat,
             'lon': lon,
             'alt': alt,
