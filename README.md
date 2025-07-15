@@ -1,19 +1,22 @@
-# spooftastic
+# Spooftastic CLI
 
-Meshtastic Spoofing CLI tools for spoofing via MQTT broker.
+PoC Meshtastic Spoofing CLI tools for spoofing via MQTT broker.
 
 > Inspired by the great work of [pdxlocation's connect](https://github.com/pdxlocations/connect)
 
+> ![IMPORTANT]
+> Always use this tool responsibly and only on networks where you have permission and nodes that you control.
+
 ## Overview
 
-spooftastic is a command-line utility for interacting with Meshtastic networks via MQTT. It allows you to listen to network traffic, send various types of packets (position, nodeinfo, messages), manage a local node database, and perform spoofing of nodeinfo, position and other packet types data for research purposes.
+Spooftastic CLI is a command-line utility for interacting with Meshtastic networks via MQTT. It allows you to listen to network traffic, send various types of packets (position, nodeinfo, messages), manage a local node database, and perform spoofing of nodeinfo, position and other packet types data for research purposes.
 
 ## Features
 
 - **Sniff** Meshtastic MQTT broker traffic and filter by message type.
 - **Send** position, nodeinfo, or text messages.
 - **Database** management for nodes (list, get, set, delete).
-- **Spoofing**: Impersonate a node by sending spoofed node activity (position, nodeinfo) in several modes (reactive, periodic, hybrid).
+- **Spoof**: Impersonate a node by sending spoofed node activity (position, nodeinfo) in several modes (reactive, periodic, hybrid).
 
 ## Requirements
 
