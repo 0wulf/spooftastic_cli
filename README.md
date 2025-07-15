@@ -4,8 +4,10 @@ PoC Meshtastic Spoofing CLI tools for spoofing via MQTT broker.
 
 > Inspired by the great work of [pdxlocation's connect](https://github.com/pdxlocations/connect)
 
-> ![IMPORTANT]
+
+> [!IMPORTANT]  
 > Always use this tool responsibly and only on networks where you have permission and nodes that you control.
+
 
 ## Overview
 
