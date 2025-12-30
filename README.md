@@ -75,7 +75,7 @@ python spooftastic.py <mode> [options]
 
 ### Meshtastic Bots and Bulletin Board Spoofing
 
-Some Meshtastic bots don't check for secure channel when receiving a message, this means that one can issue commands as another user. This bots may include Bulletin Board Services (BBS), which allow nodes to publish messages to a shared board. With spooftastic, you can spoof a node and publish a message to the BBS as if you were that node. 
+Some Meshtastic bots don't check for secure channel when receiving a message, this means that one can issue commands as another user by leveraging [CVE-2025-53627](https://www.cve.org/CVERecord?id=CVE-2025-53627). This bots may include Bulletin Board Services (BBS), which allow nodes to publish messages to a shared board. With spooftastic, you can spoof a node and publish a message to the BBS as if you were that node. 
 
 > [!IMPORTANT]  
 > This vulnerability has been fixed on [firmware version 2.7.15](https://github.com/meshtastic/firmware/releases/tag/v2.7.15.567b8ea). It's advised to update.
